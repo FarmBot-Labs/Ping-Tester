@@ -1,0 +1,19 @@
+{
+  "name": "network_tester",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "farmbot": "^8.0.1-rc1",
+    "parcel-bundler": "^1.12.3",
+    "preact": "^8.4.2",
+    "typescript": "^3.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
