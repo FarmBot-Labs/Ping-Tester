@@ -4,6 +4,10 @@ This is an example application that helps developers ping their bots remotely.
 
 It's also a good example of how to write non-Farmware extensions.
 
+![](screenshot.png)
+
+![](screenshot2.png)
+
 # Installation
 
 0. Clone repo
