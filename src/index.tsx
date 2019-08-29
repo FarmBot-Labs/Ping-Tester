@@ -1,6 +1,7 @@
 import { Component, render, h } from "preact";
 import { Farmbot } from "farmbot";
 import { Active } from "./active";
+import { LoginForm } from "./login_form";
 
 enum STATUS {
   NEED_CREDENTIALS,
@@ -24,9 +25,8 @@ interface ActiveState {
 
 type State = InactiveState | ActiveState;
 
-export function getEventValue(e: Event): string {
-  return (e.currentTarget as any).value;
-}
+export const getEventValue =
+  (e: Event) => (e.currentTarget as HTMLInputElement).value;
 
 const DEFAULT_STATE: State = {
   status: STATUS.NEED_CREDENTIALS,
@@ -37,8 +37,8 @@ const DEFAULT_STATE: State = {
 class Main extends Component<{}, State> {
   state: State = DEFAULT_STATE;
 
-  submit = () => {
-    const farmbot = new Farmbot({ token: this.state.token });
+  submit = (token: string) => {
+    const farmbot = new Farmbot({ token });
 
     const ok = () => {
       this.setState({
@@ -56,27 +56,10 @@ class Main extends Component<{}, State> {
       });
     }
 
-    farmbot
-      .connect()
-      .then(ok, no)
+    farmbot.connect().then(ok, no)
   };
 
   tokenChange = (e: Event) => this.setState({ token: getEventValue(e) });
-
-  needCredentials = () => {
-    return <div>
-      <form onSubmit={this.submit} action="javascript:">
-        <input type="text"
-          name="token"
-          placeholder="Enter Farmbot Token"
-          id="token"
-          onChange={this.tokenChange} />
-        <button type="submit">{this.state.misc}</button>
-        <br />
-        Extract token with: <pre>console.log(store.getState().auth.token.encoded)</pre>
-      </form>
-    </div>;
-  }
 
   onExit = () => this.setState({
     status: STATUS.NEED_CREDENTIALS,
@@ -88,7 +71,7 @@ class Main extends Component<{}, State> {
       case STATUS.HAVE_CREDENTIALS:
         return <Active farmbot={this.state.farmbot} onExit={this.onExit} />;
       default:
-        return this.needCredentials();
+        return <LoginForm onSubmit={this.submit} />;
     }
   }
 }

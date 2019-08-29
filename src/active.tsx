@@ -1,16 +1,8 @@
 import { Component, h } from "preact";
 import { Farmbot } from "farmbot";
 
-interface Props {
-  farmbot: Farmbot;
-  onExit: () => void;
-}
-
-interface State {
-  total: number;
-  totalOk: number;
-  inProgress: boolean;
-}
+interface Props { farmbot: Farmbot; onExit: () => void; }
+interface State { total: number; totalOk: number; inProgress: boolean; }
 
 export class Active extends Component<Props, State> {
   state: State = {
@@ -48,6 +40,7 @@ export class Active extends Component<Props, State> {
       ].join(" ");
     }
   }
+
   render({ }, { }) {
     return <div>
       <button onClick={this.props.onExit}>Try Different Token</button>
