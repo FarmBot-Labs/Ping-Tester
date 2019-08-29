@@ -4,7 +4,12 @@
     "module": "commonjs",
     "strict": true,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "lib": [
+      "es7",
+      "es2019.object",
+      "dom"
+    ]
   },
   "include": [
     "node_modules/@types"

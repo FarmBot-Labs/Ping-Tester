@@ -8,7 +8,7 @@ interface State {
   lastJobId: string;
 }
 
-const WAITING = "Sent request ";
+const WAITING = "Sent...";
 
 export class RpcTool extends Component<Props, State> {
   state: State = {
@@ -34,16 +34,16 @@ export class RpcTool extends Component<Props, State> {
     const { farmbot } = this.props;
     const axis: ALLOWED_AXIS = "all";
     return <div>
+      <button onClick={this.p(farmbot.ping())}>ping</button>
       <button onClick={this.p(farmbot.checkUpdates())}>checkUpdates</button>
       <button onClick={this.p(farmbot.dumpInfo())}>dumpInfo</button>
+      <button onClick={this.p(farmbot.readStatus())}>readStatus</button>
+      <button onClick={this.p(farmbot.rebootFirmware())}>rebootFirmware</button>
       <button onClick={this.p(farmbot.emergencyLock())}>emergencyLock</button>
       <button onClick={this.p(farmbot.emergencyUnlock())}>emergencyUnlock</button>
       <button onClick={this.p(farmbot.installFirstPartyFarmware())}>installFirstPartyFarmware</button>
-      <button onClick={this.p(farmbot.ping())}>ping</button>
       <button onClick={this.p(farmbot.powerOff())}>powerOff</button>
-      <button onClick={this.p(farmbot.readStatus())}>readStatus</button>
       <button onClick={this.p(farmbot.reboot())}>reboot</button>
-      <button onClick={this.p(farmbot.rebootFirmware())}>rebootFirmware</button>
       <button onClick={this.p(farmbot.resetMCU())}>resetMCU</button>
       <button onClick={this.p(farmbot.sync())}>sync</button>
       <button onClick={this.p(farmbot.takePhoto())}>takePhoto</button>
