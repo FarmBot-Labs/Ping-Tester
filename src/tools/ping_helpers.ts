@@ -60,3 +60,46 @@ export const completePing =
       return s;
     }
   }
+
+type PingLossReport = Record<Ping["kind"] | "total", number>;
+
+export const calculatePingLoss = (s: PingDictionary): PingLossReport => {
+  const all = Object.values(s);
+  const report: PingLossReport = {
+    complete: 0,
+    pending: 0,
+    timeout: 0,
+    total: 0,
+  };
+
+  all.map(p => report[p.kind] += 1);
+  report.total = all.length
+
+  return report;
+}
+
+interface LatencyReport {
+  best: number;
+  worst: number;
+  average: number;
+  total: number;
+}
+
+export const calculateLatency =
+  (s: PingDictionary, since = (new Date).getTime()): LatencyReport => {
+    const latency: number[] = [];
+
+    Object
+      .values(s)
+      .forEach(s => {
+        (s.kind === "complete") &&
+          latency.push(s.end.getTime() - s.start.getTime());
+      });
+
+    return {
+      best: Math.min(...latency),
+      worst: Math.max(...latency),
+      average: latency.reduce((a, b) => a + b, 0) / latency.length,
+      total: latency.length
+    };
+  }

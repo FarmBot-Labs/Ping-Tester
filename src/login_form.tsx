@@ -10,9 +10,9 @@ interface LoginFormProps {
 
 export class LoginForm extends Component<LoginFormProps, TokenForm> {
   state = {
-    email: "test@test.com",
+    email: "r@farmbot.io",
     password: "",
-    url: "http://localhost:3000",
+    url: "https://staging.farm.bot",
   }
 
   change = (key: FormField) => (e: Event) => {
