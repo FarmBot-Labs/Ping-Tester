@@ -78,6 +78,23 @@ export const calculatePingLoss = (s: PingDictionary): PingLossReport => {
   return report;
 }
 
+/** Non-destructively create a new PingDictionary
+ * where all entries started after a `cutoff` time. */
+export const prune =
+  (last: PingDictionary, cutoff: number): PingDictionary => {
+    const next: PingDictionary = {};
+    Object
+      .entries(last)
+      .filter(([_id, item]) => item.start.getTime() > cutoff)
+      .map(([uuid, item]) => next[uuid] = item);
+    return next;
+  };
+
+const TEN_MINUTES = 600000;
+
+const tenMinutesAgo =
+  () => (new Date).getTime() - TEN_MINUTES;
+
 interface LatencyReport {
   best: number;
   worst: number;
@@ -86,19 +103,18 @@ interface LatencyReport {
 }
 
 export const calculateLatency =
-  (s: PingDictionary, since = (new Date).getTime()): LatencyReport => {
+  (s: PingDictionary, cutoff = tenMinutesAgo()): LatencyReport => {
     const latency: number[] = [];
 
     Object
-      .values(s)
-      .forEach(s => {
-        (s.kind === "complete") &&
-          latency.push(s.end.getTime() - s.start.getTime());
-      });
+      .values(prune(s, cutoff))
+      .filter(s => s.kind === "complete")
+      .map(s => s.end.getTime() - s.start.getTime())
+      .forEach(s => latency.push(s));
 
     return {
-      best: Math.min(...latency),
-      worst: Math.max(...latency),
+      best: Math.min(...latency) || 0,
+      worst: Math.max(...latency) || 0,
       average: latency.reduce((a, b) => a + b, 0) / latency.length,
       total: latency.length
     };
