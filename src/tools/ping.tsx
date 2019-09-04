@@ -16,13 +16,15 @@ interface Props {
 
 type State = {
   timerId: number;
+  testStartTime: Date | undefined;
   pings: PingDictionary;
 };
 
 export class PingTool extends Component<Props, State> {
   state: State = {
     timerId: 0,
-    pings: {}
+    pings: {},
+    testStartTime: undefined
   };
 
   get pingState(): PingDictionary { return this.state.pings; }
@@ -43,8 +45,10 @@ export class PingTool extends Component<Props, State> {
       if (state == "start") {
         this.ping();
         this.start();
+        this.setState({ testStartTime: new Date() })
       } else {
         this.stop();
+        this.setState({ testStartTime: undefined })
       }
     }
 
@@ -58,6 +62,17 @@ export class PingTool extends Component<Props, State> {
     this.setState({ timerId: 0 });
   };
 
+  ago = () => {
+    const { testStartTime } = this.state;
+    if (testStartTime) {
+      const now = (new Date()).getTime();
+      const diff = (now - testStartTime.getTime()) / 1000
+      const minAgo = (diff / 60).toFixed(1);
+      return `Test started ${minAgo} minutes ago.`;
+    } else {
+      return "No tests are running."
+    }
+  };
   render({ }, { }) {
     const reportA = calculateLatency(this.pingState);
     const reportB = calculatePingLoss(this.pingState);
@@ -68,6 +83,7 @@ export class PingTool extends Component<Props, State> {
     return <div>
       <button onClick={() => this.togglePing(action)}>{action} pinging</button>
       <br />
+      <p>{this.ago()}</p>
       <ul>
         <li>best: {report.best || 0}</li>
         <li>worst: {report.worst || 0}</li>
@@ -78,12 +94,6 @@ export class PingTool extends Component<Props, State> {
         <li>Total pings: {report.total || 0}</li>
         <li>Percent OK: {(100 * ber).toFixed(1)}</li>
       </ul>
-      <pre>
-        {JSON.stringify(reportA)}
-      </pre>
-      <pre>
-        {JSON.stringify(reportB)}
-      </pre>
     </div>;
   }
 }

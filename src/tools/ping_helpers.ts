@@ -36,10 +36,9 @@ export const failPing =
       const nextFailure: Timeout =
         { kind: "timeout", id, start: failure.start };
       return { ...s, [id]: nextFailure };
-    } else {
-      console.warn("Tried to fail non-existent ping " + id);
-      return s;
     }
+
+    return s;
   }
 
 export const completePing =
@@ -78,14 +77,6 @@ export const calculatePingLoss = (s: PingDictionary): PingLossReport => {
   return report;
 }
 
-/** Non-destructively create a new PingDictionary
- * where all entries started after a `cutoff` time. */
-export const prune =
-  (last: PingDictionary, cutoff: number): PingDictionary => {
-    /** DISABLED FOR NOW -RC */
-    return last;
-  };
-
 const TEN_MINUTES = 600000;
 
 const tenMinutesAgo =
@@ -100,13 +91,10 @@ interface LatencyReport {
 
 export const calculateLatency =
   (s: PingDictionary, cutoff = tenMinutesAgo()): LatencyReport => {
-    const latency: number[] = [];
-
-    Object
-      .values(prune(s, cutoff))
+    const latency: number[] = Object
+      .values(s)
       .filter(s => s.kind === "complete")
       .map(s => s.end.getTime() - s.start.getTime())
-      .forEach(s => latency.push(s));
 
     return {
       best: Math.min(...latency) || 0,
