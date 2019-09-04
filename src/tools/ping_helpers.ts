@@ -82,12 +82,8 @@ export const calculatePingLoss = (s: PingDictionary): PingLossReport => {
  * where all entries started after a `cutoff` time. */
 export const prune =
   (last: PingDictionary, cutoff: number): PingDictionary => {
-    const next: PingDictionary = {};
-    Object
-      .entries(last)
-      .filter(([_id, item]) => item.start.getTime() > cutoff)
-      .map(([uuid, item]) => next[uuid] = item);
-    return next;
+    /** DISABLED FOR NOW -RC */
+    return last;
   };
 
 const TEN_MINUTES = 600000;

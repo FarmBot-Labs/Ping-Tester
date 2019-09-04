@@ -15,7 +15,7 @@ export class Active extends Component<Props, State> {
       <hr />
       <PingTool farmbot={this.props.farmbot} />
       <hr />
-      <RpcTool farmbot={this.props.farmbot} />
+      {/* <RpcTool farmbot={this.props.farmbot} /> */}
     </div>;
   }
 }

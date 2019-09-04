@@ -59,10 +59,9 @@ export class PingTool extends Component<Props, State> {
   };
 
   render({ }, { }) {
-    const report = {
-      ...calculateLatency(this.pingState),
-      ...calculatePingLoss(this.pingState)
-    };
+    const reportA = calculateLatency(this.pingState);
+    const reportB = calculatePingLoss(this.pingState);
+    const report = { ...reportA, ...reportB };
     const { timerId } = this.state;
     const action: "start" | "stop" = timerId === 0 ? "start" : "stop";
     const ber = ((report.complete || 0) / report.total) || 0;
@@ -79,6 +78,12 @@ export class PingTool extends Component<Props, State> {
         <li>Total pings: {report.total || 0}</li>
         <li>Percent OK: {(100 * ber).toFixed(1)}</li>
       </ul>
+      <pre>
+        {JSON.stringify(reportA)}
+      </pre>
+      <pre>
+        {JSON.stringify(reportB)}
+      </pre>
     </div>;
   }
 }
